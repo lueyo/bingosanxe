@@ -20,6 +20,18 @@
   <meta name="twitter:description" content="Mira un discurso de tu presidente favorito mientras apuestas las palabras y expresiones que va a
   usar.">
   <meta name="twitter:image" content="https://raw.githubusercontent.com/lueyo/bingosanxe/refs/heads/main/favicon.png">
+  <link rel="manifest" href="pwa/manifest.json">
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register('pwa/service-worker.js').then(function (registration) {
+          console.log('ServiceWorker registered');
+        }).catch(function (err) {
+          console.log('ServiceWorker error: ', err);
+        });
+      })
+    }
+  </script>
 <style>*,*:before,*:after{box-sizing:border-box}*{margin:0}@media (prefers-reduced-motion: no-preference){html{interpolate-size:allow-keywords}}body{line-height:1.5;-webkit-font-smoothing:antialiased}</style><link rel="stylesheet" href="styles-VLXNN3CR.css" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="styles-VLXNN3CR.css"></noscript></head>
 
 <body>
