@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generador de Enlaces - Bingo</title>
+  <link rel="icon" type="image/x-icon" href="https://raw.githubusercontent.com/lueyo/bingosanxe/refs/heads/main/favicon.png">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      min-height: 100vh;
+      color: #fff;
+      padding: 2rem;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 2rem;
+      font-size: 2rem;
+      color: #fff;
+    }
+
+    .main-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+
+    @media (max-width: 900px) {
+      .main-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .panel {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .panel-title {
+      font-size: 1.1rem;
+      margin-bottom: 1.5rem;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="color"] {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 0.5rem;
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      font-size: 1rem;
+      transition: border-color 0.2s;
+    }
+
+    .form-group input[type="text"]:focus {
+      outline: none;
+      border-color: #6366f1;
+    }
+
+    .color-input-wrapper {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .color-input-wrapper input[type="color"] {
+      width: 60px;
+      height: 45px;
+      padding: 0;
+      cursor: pointer;
+      border-radius: 0.5rem;
+    }
+
+    .color-input-wrapper input[type="text"] {
+      flex: 1;
+    }
+
+    .sample-section {
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 0.75rem;
+      padding: 1rem;
+      margin-top: 0.5rem;
+    }
+
+    .sample-section-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .checkbox-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+    }
+
+    .checkbox-wrapper input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+    }
+
+    .sample-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .sample-item {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .sample-item input {
+      flex: 1;
+      padding: 0.6rem;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 0.4rem;
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      font-size: 0.9rem;
+    }
+
+    .sample-item input:focus {
+      outline: none;
+      border-color: #6366f1;
+    }
+
+    .btn {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 0.4rem;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    .btn:active {
+      transform: scale(0.95);
+    }
+
+    .btn-add-sample {
+      background: #22c55e;
+      color: #fff;
+    }
+
+    .btn-add-sample:hover {
+      background: #16a34a;
+    }
+
+    .btn-remove-sample {
+      background: #ef4444;
+      color: #fff;
+      padding: 0.5rem 0.75rem;
+    }
+
+    .btn-remove-sample:hover {
+      background: #dc2626;
+    }
+
+    .btn-add-sample-row {
+      margin-top: 0.75rem;
+    }
+
+    .url-section {
+      margin-top: 1.5rem;
+    }
+
+    .url-output {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .url-output input {
+      flex: 1;
+      padding: 0.75rem;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 0.5rem;
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      font-size: 0.85rem;
+      font-family: monospace;
+    }
+
+    .url-output input:focus {
+      outline: none;
+      border-color: #6366f1;
+    }
+
+    .btn-copy {
+      background: #6366f1;
+      color: #fff;
+      white-space: nowrap;
+    }
+
+    .btn-copy:hover {
+      background: #4f46e5;
+    }
+
+    .btn-copy.copied {
+      background: #22c55e;
+    }
+
+    .btn-open {
+      background: #f59e0b;
+      color: #fff;
+      white-space: nowrap;
+    }
+
+    .btn-open:hover {
+      background: #d97706;
+    }
+
+    .preview-section {
+      margin-top: 1.5rem;
+    }
+
+    .preview-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .preview-toggle {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .preview-toggle input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+
+    .preview-iframe {
+      width: 100%;
+      height: 500px;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 0.75rem;
+      background: #fff;
+    }
+
+    .preview-iframe.hidden {
+      display: none;
+    }
+
+    .color-preview {
+      display: inline-block;
+      width: 30px;
+      height: 30px;
+      border-radius: 0.4rem;
+      border: 2px solid rgba(255, 255, 255, 0.5);
+      vertical-align: middle;
+      margin-right: 0.5rem;
+    }
+
+    .empty-badge {
+      background: #ef4444;
+      color: #fff;
+      padding: 0.2rem 0.5rem;
+      border-radius: 0.3rem;
+      font-size: 0.75rem;
+      margin-left: 0.5rem;
+    }
+
+    .sample-count {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Generador de Enlaces</h1>
+
+    <div class="main-layout">
+      <div class="left-panel">
+        <div class="panel">
+          <div class="panel-title">
+            <span>🎨</span> Configuración
+          </div>
+
+          <div class="form-group">
+            <label>
+              Color
+              <span id="colorPreview" class="color-preview" style="background: #db0512;"></span>
+              <code id="colorHex" style="font-size: 0.85rem; opacity: 0.7;">#db0512</code>
+            </label>
+            <div class="color-input-wrapper">
+              <input type="color" id="colorPicker" value="#db0512">
+              <input type="text" id="colorText" value="#db0512" placeholder="#db0512">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Título</label>
+            <input type="text" id="title" value="Bingo Sánchez" placeholder="Bingo Sánchez">
+          </div>
+
+          <div class="form-group">
+            <label>Descripción</label>
+            <input type="text" id="description" value="Mira un discurso de tu presidente favorito mientras apuestas las palabras y expresiones que va a usar." placeholder="Descripción">
+          </div>
+
+          <div class="form-group">
+            <label>Imagen (URL)</label>
+            <input type="text" id="image" value="perro.jpg" placeholder="perro.jpg o URL completa">
+          </div>
+
+          <div class="form-group">
+            <label>
+              Samples
+              <span id="sampleCount" class="sample-count">(41 frases por defecto)</span>
+            </label>
+            <div class="sample-section">
+              <div class="sample-section-header">
+                <label class="checkbox-wrapper">
+                  <input type="checkbox" id="emptySamples">
+                  <span>Vacío (sin frases)</span>
+                </label>
+                <span id="emptyBadge" class="empty-badge" style="display: none;">VACÍO</span>
+              </div>
+
+              <div id="sampleList" class="sample-list">
+                <div class="sample-item">
+                  <input type="text" class="sample-input" placeholder="Frase 1">
+                </div>
+              </div>
+
+              <div class="btn-add-sample-row">
+                <button type="button" class="btn btn-add-sample" id="addSampleBtn">+ Añadir frase</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel url-section">
+          <div class="panel-title">
+            <span>🔗</span> Enlace generado
+          </div>
+
+          <div class="url-output">
+            <input type="text" id="generatedUrl" readonly placeholder="El enlace se generará automáticamente...">
+            <button type="button" class="btn btn-copy" id="copyBtn">Copiar</button>
+            <button type="button" class="btn btn-open" id="openBtn">Abrir</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="right-panel">
+        <div class="panel preview-section">
+          <div class="preview-header">
+            <div class="panel-title" style="margin-bottom: 0;">
+              <span>👁️</span> Vista previa
+            </div>
+            <label class="preview-toggle">
+              <input type="checkbox" id="showPreview" checked>
+              <span>Mostrar preview</span>
+            </label>
+          </div>
+          <iframe id="previewFrame" class="preview-iframe" src="../../"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const colorPicker = document.getElementById('colorPicker');
+    const colorText = document.getElementById('colorText');
+    const colorPreview = document.getElementById('colorPreview');
+    const colorHex = document.getElementById('colorHex');
+    const titleInput = document.getElementById('title');
+    const descriptionInput = document.getElementById('description');
+    const imageInput = document.getElementById('image');
+    const emptySamplesCheckbox = document.getElementById('emptySamples');
+    const sampleList = document.getElementById('sampleList');
+    const addSampleBtn = document.getElementById('addSampleBtn');
+    const sampleCount = document.getElementById('sampleCount');
+    const emptyBadge = document.getElementById('emptyBadge');
+    const generatedUrl = document.getElementById('generatedUrl');
+    const copyBtn = document.getElementById('copyBtn');
+    const openBtn = document.getElementById('openBtn');
+    const previewFrame = document.getElementById('previewFrame');
+    const showPreviewCheckbox = document.getElementById('showPreview');
+
+    const defaultSamples = [
+      'Ultraderecha', 'Máquina del fango', 'Ayuso', 'Señor Feijóo',
+      'Medios de desinformación', 'Franco', 'Mazón', 'Esfuerzo fiscal',
+      'Los fondos buitre', 'Vox', 'Milei', 'Bulos', 'Fake news', 'Expertos',
+      'Mi mujer', 'La internacional ultraderechista', 'La especulación de la vivienda',
+      'Para garantizar', 'Nazis', 'Un esfuerzo fiscal', 'Ultras', 'La solidaridad',
+      'Amancio Ortega', 'El Partido Popular', 'Mercadona', 'Canasta Básica',
+      'El precio de la luz', 'Medios digitales', 'Fascismo', 'Democracia',
+      'Extrema derecha', 'Progresismo', 'El avance de la ultraderecha',
+      'El progreso', 'Cambio climático', 'Feminismo',
+      'Los derechos de las mujeres', 'Personas LGTBI', 'Como una moto'
+    ];
+
+    let sampleItems = Array.from(document.querySelectorAll('.sample-input'));
+
+    function updateColor() {
+      const color = colorPicker.value;
+      colorText.value = color;
+      colorPreview.style.background = color;
+      colorHex.textContent = color;
+    }
+
+    function buildUrl() {
+      const params = new URLSearchParams();
+
+      const color = colorPicker.value;
+      if (color !== '#db0512') params.set('color', color);
+
+      const title = titleInput.value.trim();
+      if (title && title !== 'Bingo Sánchez') params.set('title', title);
+
+      const description = descriptionInput.value.trim();
+      const defaultDesc = 'Mira un discurso de tu presidente favorito mientras apuestas las palabras y expresiones que va a usar.';
+      if (description && description !== defaultDesc) params.set('description', description);
+
+      const image = imageInput.value.trim();
+      if (image && image !== 'perro.jpg') params.set('image', image);
+
+      if (emptySamplesCheckbox.checked) {
+        params.set('sample', '[]');
+      } else {
+        const samples = sampleItems.map(item => item.value.trim()).filter(val => val.length > 0);
+        if (samples.length > 0) params.set('sample', JSON.stringify(samples));
+      }
+
+      const baseUrl = window.location.origin + '/';
+      return params.toString() ? baseUrl + '?' + params.toString() : baseUrl;
+    }
+
+    function updateUrl() {
+      const url = buildUrl();
+      generatedUrl.value = url;
+      if (showPreviewCheckbox.checked) {
+        previewFrame.src = url;
+      }
+    }
+
+    function updatePreview() {
+      if (showPreviewCheckbox.checked) {
+        previewFrame.classList.remove('hidden');
+        previewFrame.src = generatedUrl.value || '../../';
+      } else {
+        previewFrame.classList.add('hidden');
+      }
+    }
+
+    function updateSampleUI() {
+      const isEmpty = emptySamplesCheckbox.checked;
+      sampleList.style.display = isEmpty ? 'none' : 'flex';
+      addSampleBtn.style.display = isEmpty ? 'none' : 'inline-block';
+      emptyBadge.style.display = isEmpty ? 'inline-block' : 'none';
+
+      if (isEmpty) {
+        sampleCount.textContent = '(vacío)';
+      } else {
+        const filledCount = sampleItems.filter(item => item.value.trim()).length;
+        if (filledCount === 0) {
+          sampleCount.textContent = '(usará 41 frases por defecto)';
+        } else {
+          sampleCount.textContent = `(${filledCount} frase${filledCount !== 1 ? 's' : ''})`;
+        }
+      }
+    }
+
+    function addSampleInput(value = '') {
+      const div = document.createElement('div');
+      div.className = 'sample-item';
+      div.innerHTML = `
+        <input type="text" class="sample-input" placeholder="Frase ${sampleItems.length + 1}" value="${value}">
+        <button type="button" class="btn btn-remove-sample">×</button>
+      `;
+
+      const input = div.querySelector('input');
+      const removeBtn = div.querySelector('button');
+
+      removeBtn.addEventListener('click', () => {
+        div.remove();
+        sampleItems = sampleItems.filter(item => item !== input);
+        renumberPlaceholders();
+      });
+
+      sampleList.appendChild(div);
+      sampleItems.push(input);
+    }
+
+    function renumberPlaceholders() {
+      sampleItems.forEach((input, index) => {
+        input.placeholder = `Frase ${index + 1}`;
+      });
+      const filledCount = sampleItems.filter(item => item.value.trim()).length;
+      if (filledCount === 0) {
+        sampleCount.textContent = '(usará 41 frases por defecto)';
+      } else {
+        sampleCount.textContent = `(${filledCount} frase${filledCount !== 1 ? 's' : ''})`;
+      }
+    }
+
+    colorPicker.addEventListener('input', () => { updateColor(); updateUrl(); });
+    colorText.addEventListener('input', () => {
+      let val = colorText.value.trim();
+      if (!val.startsWith('#')) val = '#' + val;
+      if (/^#[0-9A-Fa-f]{6}$/.test(val)) {
+        colorPicker.value = val;
+        updateColor();
+        updateUrl();
+      }
+    });
+    titleInput.addEventListener('input', updateUrl);
+    descriptionInput.addEventListener('input', updateUrl);
+    imageInput.addEventListener('input', updateUrl);
+    emptySamplesCheckbox.addEventListener('change', () => { updateSampleUI(); updateUrl(); });
+
+    sampleList.addEventListener('input', () => {
+      const filledCount = sampleItems.filter(item => item.value.trim()).length;
+      if (filledCount === 0) {
+        sampleCount.textContent = '(usará 41 frases por defecto)';
+      } else {
+        sampleCount.textContent = `(${filledCount} frase${filledCount !== 1 ? 's' : ''})`;
+      }
+      updateUrl();
+    });
+
+    addSampleBtn.addEventListener('click', () => {
+      addSampleInput();
+      updateUrl();
+    });
+
+    copyBtn.addEventListener('click', () => {
+      generatedUrl.select();
+      document.execCommand('copy');
+      copyBtn.textContent = '¡Copiado!';
+      copyBtn.classList.add('copied');
+      setTimeout(() => {
+        copyBtn.textContent = 'Copiar';
+        copyBtn.classList.remove('copied');
+      }, 2000);
+    });
+
+    openBtn.addEventListener('click', () => {
+      window.open(generatedUrl.value, '_blank');
+    });
+
+    showPreviewCheckbox.addEventListener('change', updatePreview);
+
+    generatedUrl.addEventListener('click', () => {
+      generatedUrl.select();
+    });
+
+    generatedUrl.addEventListener('focus', () => {
+      generatedUrl.select();
+    });
+  </script>
+</body>
+</html>
