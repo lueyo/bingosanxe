@@ -459,10 +459,10 @@
       if (image && image !== 'perro.jpg') params.set('image', image);
 
       if (emptySamplesCheckbox.checked) {
-        params.set('sample', '[]');
+        params.set('sample', encodeURIComponent('[]'));
       } else {
         const samples = sampleItems.map(item => item.value.trim()).filter(val => val.length > 0);
-        if (samples.length > 0) params.set('sample', JSON.stringify(samples));
+        if (samples.length > 0) params.set('sample', encodeURIComponent(JSON.stringify(samples)));
       }
 
       const baseUrl = window.location.origin + '/';
